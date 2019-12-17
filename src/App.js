@@ -1,26 +1,41 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react'
+import Card from './Components/Card/Card';
+import {getRepos} from './API/API'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+  
+  constructor(props){
+    super(props);
+    this.state ={ 
+      isLoading: true,
+      page : 1,
+      items : []
+    }
+  }
+
+  componentDidMount(){
+
+    let date = "2019-11-17"
+    getRepos(date,this.state.page).then( data => {
+      this.setState({
+        items :[ ...this.state.items, ...data.items],
+        isLoading : false
+      })
+    });
+
+  }
+
+  render() {
+    console.log(this.state.items)
+    return (  
+        <div className="App">
+          { this.state.items.map( (item) => (
+            <Card repos = { item }/>
+          ))
+          } 
+        </div>
+    )
+  }
 }
 
 export default App;
