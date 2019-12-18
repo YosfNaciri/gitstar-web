@@ -1,22 +1,22 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
+import { CardHeader, CardTitle} from 'react-uikit';
 
 class Header extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-             
-        };
-    } 
 
+constructor(props) {
+    super(props);
+    this.state = {
+         
+    };
+} 
 
   render() {
-      const { name } = this.props
+      const { name } = this.props;
+      
     return (
-        <div className='Header'>
-           <h4>
-               {name}
-           </h4>
-        </div>
+        <CardHeader>
+            <CardTitle>{name}</CardTitle>
+        </CardHeader>
     )
   }
 }

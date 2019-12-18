@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
-import Card from './Components/Card/Card';
-import {getRepos} from './API/API'
+import Cards from './Components/Card/Cards';
+import {getRepos} from './API/API';
+import 'uikit/dist/css/uikit.css';
+
 
 class App extends Component {
   
@@ -30,7 +32,7 @@ class App extends Component {
     return (  
         <div className="App">
           { this.state.items.map( (item) => (
-            <Card repos = { item }/>
+            <Cards key = { item.id } repos = { item }/>
           ))
           } 
         </div>
