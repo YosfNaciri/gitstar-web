@@ -32,8 +32,10 @@ constructor(props) {
   }
 
   render() {
-      const { repos} = this.props;
+      const { repos,index} = this.props;
       const created = "Created " + repos.created_at
+
+    console.log(index)
       
     return (
         

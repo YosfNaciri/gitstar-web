@@ -13,6 +13,6 @@ export  function getRepos(date,page){
 
 export const REPOS_URL='https://api.github.com/search/repositories?q=created:%3E';
 
-export const REPOS_OPT_URL='&sort=stars&order=desc&per_page=20&page=';
+export const REPOS_OPT_URL='&sort=stars&order=desc&per_page=50&page=';
 
 //fixed number of items per page to 20 

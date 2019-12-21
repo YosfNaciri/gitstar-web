@@ -6,7 +6,9 @@ import { connect } from 'react-redux';
 import { fetchRepos,refreshRepos } from './Actions/RepositoriesAction';
 import moment from 'moment';
 import { Container } from '@material-ui/core';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
+const lastMonthDate = moment(new Date()).subtract(30,'day').format("YYYY-MM-DD");
 
 class App extends Component {
   
@@ -19,28 +21,10 @@ class App extends Component {
     }
   }
 
-  /*componentDidMount(){
-
-    let date = "2019-11-17"
-    getRepos(date,this.state.page).then( data => {
-      this.setState({
-        items :[ ...this.state.items, ...data.items],
-        isLoading : false
-      })
-    });
-
-  }*/
-  
   componentDidMount(){
-    this.setState({date : this.getDate30()}, () => this._loadRepos(this.state.date,this.state.page))
-   }
-
-  getDate30(){ // funtction to help us get the date one month before the current date.
-    let today = new Date();
-    let lastMonthDate = moment(today).subtract(30,'day').format("YYYY-MM-DD");
-  // we substract 30 days from th current date (-1 month)
-    return   lastMonthDate;
+    this._refresh(lastMonthDate)
   }
+  
 
   _refresh(date){
     this.setState({page : 1})
@@ -48,13 +32,12 @@ class App extends Component {
   }
 
   _loadRepos(date,page){
-    this.props.getRepos(date,page)
+      this.props.getRepos(date,page)
   }
 
 
   _loader(){
-
-    if(this.props.isFetching && !this.props.isRefreshing){
+    if(this.props.isFetching || this.props.isRefreshing){
       return(
         <div>
           <Loading/>
@@ -70,17 +53,28 @@ class App extends Component {
 
   render() {
     return (
-      
-        <div>
-          <GitHeader/>  
-          <Container>
-          { this.props.repos.map( (item) => (
-            <Cards key = { item.id } repos = { item }/>
+      <InfiniteScroll
+      dataLength={this.props.repos.length}
+      next={() => {
+        this.setState({page : this.state.page+1})  
+        this._loadRepos(lastMonthDate,this.state.page)
+      }}
+      hasMore={!this.props.error}
+      loader={<Container><Loading/></Container>}
+      endMessage={
+        <p style={{textAlign: 'center'}}>
+          <b>Yay! You have seen it all</b>
+        </p>
+      }
+    >
+         <Container>
+          { this.props.repos.map( (item,index) => (
+            <Cards key = { index } index = {index} repos = { item }/>
           ))
           } 
-          {this._loader()}
-          </Container>
-        </div>
+      </Container>
+      </InfiniteScroll>
+      
     )
   }
 }
@@ -104,4 +98,3 @@ const mapDispatchToProps = dispatch => {
   }
 }
 export default connect(mapStateToProps,mapDispatchToProps)(App)
-

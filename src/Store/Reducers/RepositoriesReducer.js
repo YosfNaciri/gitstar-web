@@ -2,7 +2,7 @@ import { REFRESH_REPOS,REFRESH_REPOS_SUCCESS,REFRESH_REPOS_FAILURE,FETCHING_REPO
 
 const INITIAL_STATE = { 
     repos : [] ,
-    isFetching: true,
+    isFetching: false,
     isRefreshing: false,
     error: null }
 
