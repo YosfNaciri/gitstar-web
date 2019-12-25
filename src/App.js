@@ -3,7 +3,7 @@ import Cards from './Components/Card/Cards';
 import GitHeader from './Components/Header/GitHeader';
 import  Loading  from './Components/loading/Loading';
 import { connect } from 'react-redux';
-import { fetchRepos,refreshRepos } from './Actions/RepositoriesAction';
+import { fetchRepos,refreshRepos } from './Actions/Repositories/RepositoriesAction';
 import moment from 'moment';
 import { Container } from '@material-ui/core';
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -23,6 +23,7 @@ class App extends Component {
 
   componentDidMount(){
     this._refresh(lastMonthDate)
+    
   }
   
 
@@ -36,23 +37,10 @@ class App extends Component {
   }
 
 
-  _loader(){
-    if(this.props.isFetching || this.props.isRefreshing){
-      return(
-        <div>
-          <Loading/>
-          <Loading/>
-          <Loading/>
-        </div>
-       
-      )
-    }
-  }
-
-
-
   render() {
     return (
+      <div id="root" style={{background : this.props.theme.body}}>
+      <GitHeader/>
       <InfiniteScroll
       dataLength={this.props.repos.length}
       next={() => {
@@ -62,19 +50,21 @@ class App extends Component {
       hasMore={!this.props.error}
       loader={<Container><Loading/></Container>}
       endMessage={
-        <p style={{textAlign: 'center'}}>
+        <p style={{textAlign: 'center', color : this.props.theme.text_secondary}}>
           <b>Yay! You have seen it all</b>
         </p>
       }
     >
          <Container>
           { this.props.repos.map( (item,index) => (
-            <Cards key = { index } index = {index} repos = { item }/>
+           <a key = { index } style={{textDecoration : "none"}} href={item.html_url} target='_blank' rel="noopener noreferrer"  >
+              <Cards   repos = { item }/>
+         </a>
           ))
           } 
       </Container>
       </InfiniteScroll>
-      
+      </div>
     )
   }
 }
@@ -84,7 +74,9 @@ const mapStateToProps = (state) => {
     repos: state.repositories.repos,
     isFetching: state.repositories.isFetching,
     isRefreshing : state.repositories.isRefreshing,
-    error: state.repositories.error
+    error: state.repositories.error,
+    toggleDark : state.themes.toggleDark,
+    theme: state.themes.theme
   }
 }
 const mapDispatchToProps = dispatch => {
@@ -95,6 +87,7 @@ const mapDispatchToProps = dispatch => {
     refreshRepos: (date) => {
       dispatch(refreshRepos(date))
     },
-  }
+
+}
 }
 export default connect(mapStateToProps,mapDispatchToProps)(App)

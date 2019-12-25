@@ -8,6 +8,8 @@ import Typography from "@material-ui/core/Typography";
 import StarIcon from "@material-ui/icons/Star";
 import ErrorIcon from "@material-ui/icons/Error";
 import CardActionArea from '@material-ui/core/CardActionArea';
+import moment from 'moment';
+import { connect } from 'react-redux';
 
 
 class Cards extends Component {
@@ -19,27 +21,30 @@ constructor(props) {
     };
 } 
 
-   style = {
-    card : {
-        maxWidth: "100%", 
-        borderRadius : 25,
-        margin : "1%",
-        color : "#ffffff",
-      },
-      text : {
-        color : "#000000"
-      }
-  }
+
+   
 
   render() {
-      const { repos,index} = this.props;
-      const created = "Created " + repos.created_at
-
-    console.log(index)
+      const { repos} = this.props;
+      const created = "Created " + moment(repos.created_at).fromNow() 
+      const style = {
+        card : {
+            maxWidth: "100%", 
+            borderRadius : 25,
+            margin : "1%",
+            background : this.props.theme.card,
+          },
+          text : {
+            color : this.props.theme.text_primary,
+          },
+          subText : {
+            color : this.props.theme.text_secondary,
+          }
+      }
       
     return (
         
-        <Card style={this.style.card}>
+        <Card style={style.card}>
             <CardActionArea>
                 <CardHeader
                     avatar={
@@ -49,22 +54,22 @@ constructor(props) {
                             style={{background : "#ffffff"}}
                         />
                         }
-                    title={<Typography variant="body2" style={this.style.text} component="h3">{repos.name}</Typography>}
-                    subheader={<Typography variant="body2" style={this.style.text} component="h4">{created}</Typography>}
+                    title={<Typography variant="inherit" style={style.text} component="h4">{repos.name}</Typography>}
+                    subheader={<Typography variant="caption" style={style.subText} component="h5">{created}</Typography>}
 
                 />
 
                 <CardContent>
-                    <Typography variant="body2" style={this.style.text} component="p">
+                    <Typography variant="body2" style={style.text} component="p">
                         {repos.description}
                     </Typography>
                 </CardContent>
                 
                 <CardActions >
                     <StarIcon style={{ color: "yellow", marginLeft : "1%" }}/> 
-                    <Typography variant="body2" style={this.style.text} component="h3">{repos.stargazers_count}</Typography>
+                    <Typography variant="body2" style={style.text} component="h3">{repos.stargazers_count}</Typography>
                     <ErrorIcon style={{ color: "red" }}/> 
-                    <Typography variant="body2" style={this.style.text} component="h3">{repos.open_issues}</Typography>
+                    <Typography variant="body2" style={style.text} component="h3">{repos.open_issues}</Typography>
                 </CardActions>
             </CardActionArea>
         </Card>
@@ -73,4 +78,15 @@ constructor(props) {
 }
 
 
-export default Cards;
+const mapStateToProps = (state) => { 
+    return {
+      toggleDark : state.themes.toggleDark,
+      theme: state.themes.theme
+    }
+  }
+  const mapDispatchToProps = dispatch => {
+    return {
+
+    }
+  }
+  export default connect(mapStateToProps,mapDispatchToProps) (Cards);

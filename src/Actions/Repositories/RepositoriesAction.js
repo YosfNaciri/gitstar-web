@@ -1,7 +1,7 @@
 import {FETCHING_REPOS, FETCHING_REPOS_FAILURE, FETCHING_REPOS_SUCCESS,
-        REFRESH_REPOS, REFRESH_REPOS_FAILURE, REFRESH_REPOS_SUCCESS} from './Types';
+        REFRESH_REPOS, REFRESH_REPOS_FAILURE, REFRESH_REPOS_SUCCESS} from './repositoriesTypes';
         
-import { REPOS_OPT_URL , REPOS_URL } from  '../API/API';
+import { REPOS_OPT_URL , REPOS_URL } from  '../../API/API';
 
 export function getFetchRepos() {
     return {
